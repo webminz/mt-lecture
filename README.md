@@ -4,4 +4,4 @@ Resources for the model transformation lecture held for PCS955@HVL in Bergen Spr
 ## Update Feb. 24th 2020
 
 Some example solutions are now availbel under `/exercises/solutions`.
-Thanks to @Time Kräuter for letting me publish his solution as well.
+Thanks to @Tim Kräuter for letting me publish his solution as well.
