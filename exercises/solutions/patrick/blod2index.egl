@@ -1,0 +1,11 @@
+<html>
+<head>
+<title>[%= b.author %]'s blog</title>
+</head>
+<body>
+<ul>
+[% for (post in b.posts) { %]
+<li><a href="./[%=post.shortTitle%]/[%=post.shortTitle%].html">[%=post.title%]</a></li>
+[% } %]
+</ul
+</body>

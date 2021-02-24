@@ -1,0 +1,12 @@
+rule Blog2Index transform b : Blog {
+		template : "blod2index.egl"		
+		target :  "output/index.html"
+}
+
+rule Blog2PostPage transform p : Post {
+		template : "post2html.egl"		
+		target :  "output/" + p.shortTitle + "/" +  p.shortTitle + ".html"
+}
+
+
+	

@@ -1,0 +1,65 @@
+rule Package2Schema 
+transform p : IN!EPackage 
+to s : OUT!Schema {
+    
+   s.tables = p.eClassifiers.collect(c|c.equivalents().select(e|e.isTypeOf(OUT!Table)).first());
+}
+
+rule Class2Table
+transform c : IN!EClass
+to t : OUT!Table, pkColumn : OUT!Column, pkConstrainst : OUT!PrimaryKeyConstraint, pkColumnType: OUT!ColumnType {
+   t.name = c.name;
+   t.primaryKey = pkConstrainst;
+   t.columns.add(pkColumn);
+   pkColumn.name = "id";
+   pkConstrainst.name = c.name + "_pk";
+   pkColumn.type = pkColumnType;
+   pkColumnType.size = 4000;
+   pkColumnType.dataType = OUT!SQLDataType#NUMBER;
+   pkConstrainst.definedOnColumns.add(pkColumn);
+   pkConstrainst.belongingTable = t;
+   for (a : IN!EAttribute in c.eAttributes) {
+   	   t.columns.add(a.equivalent());
+   }
+}
+
+
+@lazy
+rule Att2Column 
+transform a : IN!EAttribute
+to c : OUT!Column {
+	c.name = a.name;
+	c.type = a.eAttributeType.toColumnType();
+}
+
+
+operation IN!EDataType toColumnType() : OUT!ColumnType {
+	var type = new OUT!ColumnType();
+	switch (self.name){
+		case "EString":
+			type.dataType = OUT!SQLDataType#VARCHAR;
+			type.size = 4000;
+		// Only strings in all the input models!!! Other cases not tested!
+		case "ELong":
+		case "EInteger":
+		case "EShort":
+		case "EByte":
+			type.dataType = OUT!SQLDataType#NUMBER;
+			type.size = 32;
+			type.decimalPlaces = 0;
+		case "EDouble":
+		case "EFloat":
+			type.dataType = OUT!SQLDataType#NUMBER;
+			type.size = 32;
+			type.decimalPlaces = 4;
+		case "EBoolean":
+			type.dataType = OUT!SQLDataType#NUMBER;
+			type.size = 1;
+			type.decimalPlaces = 0;
+		case "EEnum":
+			type.dataType = OUT!SQLDataType#NUMBER;
+			type.size = 2;
+			type.decimalPlaces = 0;
+	}
+	return type;
+}

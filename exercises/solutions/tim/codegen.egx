@@ -1,0 +1,11 @@
+rule Blog2IndexHTML transform b : Blog {
+		template : "blog2html.egl"		
+		target : "output/" + b.author + ".html"
+}
+
+rule Post2HTML transform blogpost : Post {
+		template : "post2html.egl"		
+		target : "output/" + blogpost.shortTitle + "/" + blogpost.shortTitle + ".html"
+}
+
+	
